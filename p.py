@@ -1,1 +1,1 @@
-print("Yattitude = Saiteja")
+print("Saiteja")
