@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "coznt": {
+      "command": "pnpm.cmd",
+      "args": [
+        "--filter",
+        "food_donation_centre",
+        "mcp"
+      ],
+      "env": {
+        "COZNT_URL": "http://localhost:3029",
+        "COZNT_API_KEY": "dlz_xhd4ImRBWb6oxENyg3sqHKQhftL8fKDaDwqrcbx1HFw"
+      }
+    }
+  }
+}
