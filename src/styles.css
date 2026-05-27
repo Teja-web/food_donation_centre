@@ -1,0 +1,409 @@
+:root {
+  color-scheme: light;
+  --bg: #f5f6f7;
+  --surface: #ffffff;
+  --surface-muted: #edf3f4;
+  --text: #1f2933;
+  --muted: #5b6670;
+  --line: #d8dee4;
+  --primary: #19715f;
+  --primary-dark: #0f4f45;
+  --danger: #b42318;
+  --warning: #9a5b00;
+  --info: #2459a6;
+  --focus: #2563eb;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+.app-header {
+  align-items: center;
+  background: #193b42;
+  color: #fff;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  padding: 1.5rem clamp(1rem, 4vw, 3rem);
+}
+
+.app-header h1,
+.panel h2,
+.item-card h3 {
+  margin: 0;
+}
+
+.app-header h1 {
+  font-size: clamp(1.7rem, 4vw, 2.75rem);
+  font-weight: 750;
+}
+
+.eyebrow {
+  color: inherit;
+  font-size: 0.72rem;
+  font-weight: 760;
+  letter-spacing: 0.08em;
+  margin: 0 0 0.35rem;
+  opacity: 0.72;
+  text-transform: uppercase;
+}
+
+.app-shell {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(12, 1fr);
+  margin: 0 auto;
+  max-width: 1380px;
+  padding: 1rem clamp(1rem, 3vw, 2rem) 2rem;
+}
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  grid-column: span 6;
+  padding: 1rem;
+}
+
+.donation-panel,
+.request-panel,
+.inventory-panel,
+.operations-panel {
+  grid-column: 1 / -1;
+}
+
+.section-heading,
+.form-actions,
+.card-title-row,
+.button-row {
+  align-items: center;
+  display: flex;
+  gap: 0.75rem;
+}
+
+.section-heading {
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.form-grid {
+  display: grid;
+  gap: 0.85rem;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+label {
+  color: var(--muted);
+  display: grid;
+  font-size: 0.86rem;
+  font-weight: 650;
+  gap: 0.35rem;
+}
+
+input,
+select,
+textarea {
+  background: #fff;
+  border: 1px solid #c8d2c5;
+  border-radius: 6px;
+  color: var(--text);
+  min-height: 2.45rem;
+  padding: 0.55rem 0.65rem;
+  width: 100%;
+}
+
+textarea {
+  margin-top: 0.85rem;
+  resize: vertical;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--focus) 28%, transparent);
+  outline-offset: 1px;
+}
+
+.invalid {
+  border-color: var(--danger);
+}
+
+.field-error,
+.form-status.error {
+  color: var(--danger);
+}
+
+.field-error {
+  font-size: 0.76rem;
+}
+
+.form-actions {
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  margin-top: 1rem;
+}
+
+.form-status {
+  color: var(--muted);
+  margin: 0;
+}
+
+.form-status.success {
+  color: var(--primary-dark);
+}
+
+button {
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 720;
+  min-height: 2.4rem;
+  padding: 0.58rem 0.85rem;
+}
+
+.primary-button {
+  background: var(--primary);
+  color: #fff;
+}
+
+.primary-button:hover {
+  background: var(--primary-dark);
+}
+
+.secondary-button {
+  background: var(--surface-muted);
+  color: #18392f;
+}
+
+.danger-button {
+  background: #fff1f0;
+  color: var(--danger);
+}
+
+.small {
+  min-height: 2.1rem;
+  padding: 0.4rem 0.65rem;
+}
+
+.compact-control {
+  min-width: 11rem;
+}
+
+.stack,
+.inventory-grid,
+.metric-grid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.inventory-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.metric-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.item-card {
+  background: #fbfcfa;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.9rem;
+}
+
+.item-card p {
+  color: var(--muted);
+  margin: 0.55rem 0;
+}
+
+.item-card label {
+  margin-top: 0.75rem;
+}
+
+.card-title-row {
+  justify-content: space-between;
+}
+
+.status-pill {
+  border-radius: 999px;
+  background: #e8eef2;
+  color: #334155;
+  font-size: 0.75rem;
+  font-weight: 750;
+  padding: 0.25rem 0.55rem;
+  white-space: nowrap;
+}
+
+.status-pill.approved,
+.status-pill.allocated,
+.status-pill.fulfilled {
+  background: #dff5e8;
+  color: #16613f;
+}
+
+.status-pill.rejected,
+.status-pill.expired,
+.status-pill.cancelled {
+  background: #ffe4df;
+  color: var(--danger);
+}
+
+.status-pill.changes_requested,
+.status-pill.open {
+  background: #fff4d6;
+  color: var(--warning);
+}
+
+dl {
+  display: grid;
+  gap: 0.4rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0.75rem 0;
+}
+
+dt {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 740;
+  text-transform: uppercase;
+}
+
+dd {
+  margin: 0.2rem 0 0;
+}
+
+.reason,
+.expiry-warning,
+.link-note,
+.card-feedback {
+  border-radius: 6px;
+  padding: 0.55rem;
+}
+
+.reason {
+  background: #f8ebe8;
+}
+
+.link-note {
+  background: #edf5ff;
+  color: var(--info);
+  font-weight: 700;
+}
+
+.card-feedback {
+  color: var(--danger);
+  margin: 0.6rem 0 0;
+}
+
+.expiry-warning {
+  background: #fff4d6;
+  color: var(--warning);
+  font-weight: 720;
+}
+
+.notice,
+.metric-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.8rem;
+}
+
+.notice h3,
+.notice p {
+  margin: 0;
+}
+
+.notice p {
+  color: var(--muted);
+  margin-top: 0.3rem;
+}
+
+.notice.info {
+  background: #edf5ff;
+}
+
+.notice.warning {
+  background: #fff8e6;
+}
+
+.notice.danger {
+  background: #fff1f0;
+}
+
+.metric-card {
+  background: #fbfcfd;
+  display: grid;
+  gap: 0.2rem;
+  min-height: 5rem;
+}
+
+.metric-card span {
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 720;
+}
+
+.metric-card strong {
+  font-size: 1.65rem;
+  line-height: 1;
+}
+
+.empty-state {
+  background: #f7f8f4;
+  border: 1px dashed #cbd5c8;
+  border-radius: 8px;
+  color: var(--muted);
+  margin: 0;
+  padding: 1rem;
+}
+
+@media (max-width: 920px) {
+  .panel,
+  .donation-panel,
+  .inventory-panel {
+    grid-column: 1 / -1;
+  }
+
+  .form-grid,
+  .inventory-grid,
+  .metric-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .app-header,
+  .section-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .form-grid,
+  .inventory-grid,
+  .metric-grid,
+  dl {
+    grid-template-columns: 1fr;
+  }
+
+  .button-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
