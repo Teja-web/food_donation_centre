@@ -151,6 +151,43 @@
             <p class="eyebrow">Reports</p>
             <h2 id="reports-title">Impact summary</h2>
           </div>
+          <div class="filter-row" aria-label="Report filters">
+            <label class="compact-control">
+              Donation status
+              <select id="report-donation-filter">
+                <option value="all">All</option>
+                <option value="active">Active</option>
+                <option value="pending_review">Pending review</option>
+                <option value="approved">Approved</option>
+                <option value="allocated">Allocated</option>
+                <option value="delivered">Delivered</option>
+                <option value="expired">Expired</option>
+                <option value="cancelled">Cancelled</option>
+                <option value="rejected">Rejected</option>
+              </select>
+            </label>
+            <label class="compact-control">
+              Request status
+              <select id="report-request-filter">
+                <option value="all">All</option>
+                <option value="open">Open</option>
+                <option value="allocated">Allocated</option>
+                <option value="fulfilled">Fulfilled</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </label>
+            <label class="compact-control">
+              Operation stage
+              <select id="report-operation-filter">
+                <option value="all">All</option>
+                <option value="ready_for_pickup">Ready for pickup</option>
+                <option value="picked_up">Picked up</option>
+                <option value="delivered">Delivered</option>
+                <option value="expired">Expired</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </label>
+          </div>
         </div>
         <div id="reports-list" class="metric-grid"></div>
       </section>

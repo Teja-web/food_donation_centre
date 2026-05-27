@@ -182,7 +182,7 @@ test("delivery updates donation and fulfills linked request", () => {
   assert.equal(fulfilled.status, REQUEST_STATUSES.FULFILLED);
 });
 
-test("notifications cover pending review, near-expiry, rejection, and open requests", () => {
+test("notifications cover pending review, operations, near-expiry, rejection, and open requests", () => {
   const pending = createDonation(validDonationInput(), now).donation;
   const nearExpiry = approvedDonation({ expiryAt: "2026-05-26T20:00" });
   const rejected = reviewDonation(
@@ -195,6 +195,7 @@ test("notifications cover pending review, near-expiry, rejection, and open reque
   const notifications = deriveNotifications([pending, nearExpiry, rejected], [request], now);
 
   assert.equal(notifications.some((item) => item.id.startsWith("pending-")), true);
+  assert.equal(notifications.some((item) => item.id.startsWith("operation-")), true);
   assert.equal(notifications.some((item) => item.id.startsWith("expiry-")), true);
   assert.equal(notifications.some((item) => item.id.startsWith("rejected-")), true);
   assert.equal(notifications.some((item) => item.id.startsWith("request-")), true);
@@ -222,4 +223,34 @@ test("reports summarize the workflow source of truth", () => {
   assert.equal(summary.deliveredQuantity, 50);
   assert.equal(summary.rejectedItems, 1);
   assert.equal(summary.fulfilledRequests, 1);
+});
+
+test("reports can be filtered by workflow status and operation stage", () => {
+  const approved = approvedDonation();
+  const delivered = updateOperationStatus(
+    allocateDonationToRequest(
+      approvedDonation({ foodType: "Produce" }),
+      createRecipientRequest(validRequestInput(), now).request,
+      "",
+      now,
+    ).donation,
+    OPERATION_STATUSES.DELIVERED,
+    "",
+    now,
+  );
+  const request = createRecipientRequest(validRequestInput({ recipientName: "Clinic" }), now).request;
+
+  const activeSummary = getReportSummary([approved, delivered], [request], now, {
+    donationStatus: "active",
+    requestStatus: "open",
+  });
+  const deliveredSummary = getReportSummary([approved, delivered], [request], now, {
+    operationStatus: OPERATION_STATUSES.DELIVERED,
+  });
+
+  assert.equal(activeSummary.totalDonations, 1);
+  assert.equal(activeSummary.approvedQuantity, 50);
+  assert.equal(activeSummary.openRequests, 1);
+  assert.equal(deliveredSummary.totalDonations, 1);
+  assert.equal(deliveredSummary.deliveredQuantity, 50);
 });

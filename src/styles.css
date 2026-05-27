@@ -91,7 +91,8 @@ textarea {
 .section-heading,
 .form-actions,
 .card-title-row,
-.button-row {
+.button-row,
+.filter-row {
   align-items: center;
   display: flex;
   gap: 0.75rem;
@@ -204,6 +205,11 @@ button {
 
 .compact-control {
   min-width: 11rem;
+}
+
+.filter-row {
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .stack,
