@@ -16,9 +16,7 @@ import {
   validateDonationInput,
   validateRecipientRequestInput,
 } from "./domain.js";
-
-const STORAGE_KEY = "foodDonationCentre.state.v2";
-const LEGACY_DONATION_KEY = "foodDonationCentre.donations.v1";
+import { createAppStateRepository } from "./repository.js";
 
 const donationForm = document.querySelector("#donation-form");
 const donationFormStatus = document.querySelector("#form-status");
@@ -33,49 +31,16 @@ const allocationList = document.querySelector("#allocation-list");
 const operationsList = document.querySelector("#operations-list");
 const notificationsList = document.querySelector("#notifications-list");
 const reportsList = document.querySelector("#reports-list");
+const reportDonationFilter = document.querySelector("#report-donation-filter");
+const reportRequestFilter = document.querySelector("#report-request-filter");
+const reportOperationFilter = document.querySelector("#report-operation-filter");
 const seedDemoButton = document.querySelector("#seed-demo");
 
-let state = loadState();
-
-function createEmptyState() {
-  return {
-    version: 2,
-    donations: [],
-    recipientRequests: [],
-  };
-}
-
-function loadState() {
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      return {
-        ...createEmptyState(),
-        ...parsed,
-        donations: Array.isArray(parsed.donations) ? parsed.donations : [],
-        recipientRequests: Array.isArray(parsed.recipientRequests)
-          ? parsed.recipientRequests
-          : [],
-      };
-    }
-
-    const legacyDonations = localStorage.getItem(LEGACY_DONATION_KEY);
-    if (legacyDonations) {
-      return {
-        ...createEmptyState(),
-        donations: JSON.parse(legacyDonations),
-      };
-    }
-  } catch {
-    return createEmptyState();
-  }
-
-  return createEmptyState();
-}
+const repository = createAppStateRepository();
+let state = repository.load();
 
 function saveState() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  repository.save(state);
 }
 
 function setFormErrors(form, errors) {
@@ -491,7 +456,11 @@ function renderNotifications() {
 }
 
 function renderReports() {
-  const summary = getReportSummary(state.donations, state.recipientRequests);
+  const summary = getReportSummary(state.donations, state.recipientRequests, new Date(), {
+    donationStatus: reportDonationFilter.value,
+    requestStatus: reportRequestFilter.value,
+    operationStatus: reportOperationFilter.value,
+  });
   const metrics = [
     ["Total donations", summary.totalDonations],
     ["Pending review", summary.pendingReview],
@@ -614,6 +583,9 @@ adminReview.addEventListener("click", handleReviewClick);
 allocationList.addEventListener("click", handleAllocationClick);
 operationsList.addEventListener("click", handleOperationClick);
 inventoryFilter.addEventListener("change", renderInventory);
+reportDonationFilter.addEventListener("change", renderReports);
+reportRequestFilter.addEventListener("change", renderReports);
+reportOperationFilter.addEventListener("change", renderReports);
 seedDemoButton.addEventListener("click", seedDemoData);
 
 render();

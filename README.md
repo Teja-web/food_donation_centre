@@ -15,7 +15,9 @@ A dependency-free browser app for the approved food donation centre workflows.
 - Admins can allocate approved unexpired inventory to open recipient requests.
 - Operations users can mark allocated or approved inventory as picked up, delivered, expired, or cancelled.
 - Alerts highlight pending reviews, open recipient requests, rejected donations, and near-expiry inventory.
+- Alerts also surface pending pickup or delivery actions for approved and allocated inventory.
 - Reports summarize donations, pending reviews, quantities approved, allocated, and delivered, expired items, rejected items, and request fulfillment.
+- Reports can be filtered by donation status, request status, and operation stage.
 
 ## Requirements Covered
 
@@ -49,6 +51,6 @@ node server.js
 
 ## Notes
 
-- Data is stored in browser `localStorage` behind a versioned app-state boundary.
+- Data is stored in browser `localStorage` through a versioned repository boundary.
 - The current implementation is a local workflow slice; no backend database or authentication layer exists yet.
 - Roles are represented by workflow sections in the browser app, not by secure authentication.

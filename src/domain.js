@@ -364,6 +364,24 @@ function deriveNotifications(donations, requests, now = new Date()) {
       });
     });
 
+  donations
+    .filter(
+      (donation) =>
+        [DONATION_STATUSES.APPROVED, DONATION_STATUSES.ALLOCATED].includes(donation.status) &&
+        !isExpired(donation, now),
+    )
+    .forEach((donation) => {
+      const operationLabel = donation.operationStatus
+        ? statusLabel(donation.operationStatus)
+        : "Ready for pickup";
+      notifications.push({
+        id: `operation-${donation.id}`,
+        tone: "info",
+        title: "Pending operations action",
+        message: `${donation.foodType} is ${operationLabel.toLowerCase()} and needs pickup or delivery tracking.`,
+      });
+    });
+
   requests
     .filter((request) => request.status === REQUEST_STATUSES.OPEN)
     .forEach((request) => {
@@ -378,28 +396,60 @@ function deriveNotifications(donations, requests, now = new Date()) {
   return notifications;
 }
 
-function getReportSummary(donations, requests, now = new Date()) {
-  const inventory = getInventoryItems(donations, "all", now);
+function filterReportDonations(donations, filters = {}) {
+  return donations.filter((donation) => {
+    if (filters.donationStatus && filters.donationStatus !== "all") {
+      if (filters.donationStatus === "active") {
+        if (![DONATION_STATUSES.APPROVED, DONATION_STATUSES.ALLOCATED].includes(donation.status)) {
+          return false;
+        }
+      } else if (donation.status !== filters.donationStatus) {
+        return false;
+      }
+    }
+
+    if (filters.operationStatus && filters.operationStatus !== "all") {
+      return donation.operationStatus === filters.operationStatus;
+    }
+
+    return true;
+  });
+}
+
+function filterReportRequests(requests, filters = {}) {
+  return requests.filter((request) => {
+    if (filters.requestStatus && filters.requestStatus !== "all") {
+      return request.status === filters.requestStatus;
+    }
+
+    return true;
+  });
+}
+
+function getReportSummary(donations, requests, now = new Date(), filters = {}) {
+  const filteredDonations = filterReportDonations(donations, filters);
+  const filteredRequests = filterReportRequests(requests, filters);
+  const inventory = getInventoryItems(filteredDonations, "all", now);
 
   return {
-    totalDonations: donations.length,
-    pendingReview: donations.filter((item) => item.status === DONATION_STATUSES.PENDING_REVIEW)
+    totalDonations: filteredDonations.length,
+    pendingReview: filteredDonations.filter((item) => item.status === DONATION_STATUSES.PENDING_REVIEW)
       .length,
-    approvedQuantity: donations
+    approvedQuantity: filteredDonations
       .filter((item) => [DONATION_STATUSES.APPROVED, DONATION_STATUSES.ALLOCATED].includes(item.status))
       .reduce((sum, item) => sum + Number(item.quantity || 0), 0),
-    allocatedQuantity: donations
+    allocatedQuantity: filteredDonations
       .filter((item) => item.status === DONATION_STATUSES.ALLOCATED)
       .reduce((sum, item) => sum + Number(item.quantity || 0), 0),
-    deliveredQuantity: donations
+    deliveredQuantity: filteredDonations
       .filter((item) => item.status === DONATION_STATUSES.DELIVERED)
       .reduce((sum, item) => sum + Number(item.quantity || 0), 0),
     expiredItems: inventory.filter(
       (item) => item.status === DONATION_STATUSES.EXPIRED || item.expired,
     ).length,
-    rejectedItems: donations.filter((item) => item.status === DONATION_STATUSES.REJECTED).length,
-    openRequests: requests.filter((item) => item.status === REQUEST_STATUSES.OPEN).length,
-    fulfilledRequests: requests.filter((item) => item.status === REQUEST_STATUSES.FULFILLED)
+    rejectedItems: filteredDonations.filter((item) => item.status === DONATION_STATUSES.REJECTED).length,
+    openRequests: filteredRequests.filter((item) => item.status === REQUEST_STATUSES.OPEN).length,
+    fulfilledRequests: filteredRequests.filter((item) => item.status === REQUEST_STATUSES.FULFILLED)
       .length,
   };
 }
