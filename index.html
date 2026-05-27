@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Food Donation Centre</title>
+    <link rel="stylesheet" href="./src/styles.css">
+  </head>
+  <body>
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">Operations Console</p>
+        <h1>Food Donation Centre</h1>
+      </div>
+      <button class="secondary-button" id="seed-demo" type="button">Load demo data</button>
+    </header>
+
+    <main class="app-shell">
+      <section class="panel donation-panel" aria-labelledby="donation-form-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Donor</p>
+            <h2 id="donation-form-title">Submit surplus food</h2>
+          </div>
+        </div>
+
+        <form id="donation-form" novalidate>
+          <div class="form-grid">
+            <label>
+              Donor name
+              <input name="donorName" autocomplete="name" required>
+            </label>
+            <label>
+              Contact
+              <input name="contact" autocomplete="tel" required>
+            </label>
+            <label>
+              Food type
+              <input name="foodType" placeholder="Cooked meals, produce, grains" required>
+            </label>
+            <label>
+              Quantity
+              <input name="quantity" inputmode="numeric" type="number" min="1" required>
+            </label>
+            <label>
+              Unit
+              <select name="unit" required>
+                <option value="meals">Meals</option>
+                <option value="kg">Kilograms</option>
+                <option value="packages">Packages</option>
+              </select>
+            </label>
+            <label>
+              Expiry date and time
+              <input name="expiryAt" type="datetime-local" required>
+            </label>
+            <label>
+              Pickup location
+              <input name="pickupLocation" autocomplete="street-address" required>
+            </label>
+            <label>
+              Availability window
+              <input name="availabilityWindow" placeholder="Today, 6 PM - 8 PM" required>
+            </label>
+          </div>
+          <label>
+            Storage notes
+            <textarea name="storageNotes" rows="3" placeholder="Packed, refrigerated, allergens, handling notes"></textarea>
+          </label>
+          <div class="form-actions">
+            <button class="primary-button" type="submit">Submit donation</button>
+            <p class="form-status" id="form-status" role="status"></p>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel request-panel" aria-labelledby="recipient-form-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Recipient</p>
+            <h2 id="recipient-form-title">Request food support</h2>
+          </div>
+        </div>
+
+        <form id="recipient-form" novalidate>
+          <div class="form-grid">
+            <label>
+              Recipient or organization
+              <input name="recipientName" autocomplete="organization" required>
+            </label>
+            <label>
+              Contact
+              <input name="recipientContact" autocomplete="tel" required>
+            </label>
+            <label>
+              Food category
+              <input name="requestedFood" placeholder="Cooked meals, produce, staples" required>
+            </label>
+            <label>
+              Quantity needed
+              <input name="quantityNeeded" inputmode="numeric" type="number" min="1" required>
+            </label>
+            <label>
+              Unit
+              <select name="requestUnit" required>
+                <option value="meals">Meals</option>
+                <option value="kg">Kilograms</option>
+                <option value="packages">Packages</option>
+              </select>
+            </label>
+            <label>
+              Urgency
+              <select name="urgency" required>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+              </select>
+            </label>
+            <label>
+              Fulfillment
+              <select name="fulfillmentPreference" required>
+                <option value="delivery">Delivery</option>
+                <option value="pickup">Pickup</option>
+              </select>
+            </label>
+          </div>
+          <label>
+            Request notes
+            <textarea name="notes" rows="3" placeholder="Household count, timing, location, or delivery notes"></textarea>
+          </label>
+          <div class="form-actions">
+            <button class="primary-button" type="submit">Submit request</button>
+            <p class="form-status" id="recipient-form-status" role="status"></p>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel" aria-labelledby="notifications-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Alerts</p>
+            <h2 id="notifications-title">Action queue</h2>
+          </div>
+        </div>
+        <div id="notifications-list" class="stack"></div>
+      </section>
+
+      <section class="panel" aria-labelledby="reports-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Reports</p>
+            <h2 id="reports-title">Impact summary</h2>
+          </div>
+        </div>
+        <div id="reports-list" class="metric-grid"></div>
+      </section>
+
+      <section class="panel" aria-labelledby="donor-history-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Donor</p>
+            <h2 id="donor-history-title">Submission history</h2>
+          </div>
+        </div>
+        <div id="donor-history" class="stack"></div>
+      </section>
+
+      <section class="panel" aria-labelledby="admin-review-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Admin</p>
+            <h2 id="admin-review-title">Pending review</h2>
+          </div>
+        </div>
+        <div id="admin-review" class="stack"></div>
+      </section>
+
+      <section class="panel inventory-panel" aria-labelledby="inventory-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Inventory</p>
+            <h2 id="inventory-title">Food stock</h2>
+          </div>
+          <label class="compact-control">
+            Status
+            <select id="inventory-filter">
+              <option value="active">Active</option>
+              <option value="all">All</option>
+              <option value="approved">Approved</option>
+              <option value="allocated">Allocated</option>
+              <option value="delivered">Delivered</option>
+              <option value="expired">Expired</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+          </label>
+        </div>
+        <div id="inventory-list" class="inventory-grid"></div>
+      </section>
+
+      <section class="panel" aria-labelledby="request-list-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Recipients</p>
+            <h2 id="request-list-title">Request queue</h2>
+          </div>
+        </div>
+        <div id="request-list" class="stack"></div>
+      </section>
+
+      <section class="panel" aria-labelledby="allocation-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Admin</p>
+            <h2 id="allocation-title">Allocation workspace</h2>
+          </div>
+        </div>
+        <div id="allocation-list" class="stack"></div>
+      </section>
+
+      <section class="panel operations-panel" aria-labelledby="operations-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Operations</p>
+            <h2 id="operations-title">Pickup and delivery board</h2>
+          </div>
+        </div>
+        <div id="operations-list" class="inventory-grid"></div>
+      </section>
+    </main>
+
+    <script type="module" src="./src/app.js"></script>
+  </body>
+</html>
